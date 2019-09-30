@@ -15,7 +15,7 @@ public:
 	bool Find(int target, std::vector<std::vector<int>> array);	// 剑指Offer 二维数组中的查找
 	void replaceSpace(char *str, int length);		// 剑指Offer 替换空格
 	ListNode* ReverseList(ListNode* head);			// 剑指Offer 倒序打印单链表
-	
+	void ReverseString(std::string& str, size_t n);	// 字符串翻转				
 };
 
 bool solution::Find(int target, std::vector<std::vector<int>> array)
@@ -38,7 +38,6 @@ bool solution::Find(int target, std::vector<std::vector<int>> array)
 	return false;
 }
 
-
 ListNode* solution::ReverseList(ListNode* head)
 {
 	ListNode* pNode = head;	// 当前节点
@@ -59,12 +58,37 @@ ListNode* solution::ReverseList(ListNode* head)
 	
 }
 
+void solution::ReverseString(std::string &str, size_t n)
+{
+	if (n > str.length() || n == 0) return;
+	char temp = ' ';
+	for (size_t i = 0; i < n/2; i++)
+	{
+		temp = str[i];
+		str[i] = str[n - i - 1];
+		str[n - i - 1] = temp;
+	}
+	for (size_t i = n; i < (str.length() + n)/2; i++)
+	{
+		temp = str[i];
+		str[i] = str[str.length() + n - i - 1];
+		str[str.length() + n - i - 1] = temp;
+	}
+	for (size_t i = 0; i < str.length()/2; i++)
+	{
+		temp = str[i];
+		str[i] = str[str.length() - i - 1];
+		str[str.length() - i - 1] = temp;
+	}
+	return;
+}
 
 
 int main()
 {
 	solution mySolution;
-	std::vector<std::vector<int>> array = { {1, 2, 3}, {2, 3, 4}, {3, 4, 5} };
-	std::cout << mySolution.Find(5, array) << std::endl;
+	std::string test = "helloworld";
+	mySolution.ReverseString(test, 5);
+	std::cout << test << std::endl;
 	return 0;
 }

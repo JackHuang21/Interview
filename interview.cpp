@@ -4,6 +4,7 @@
 #include <climits>
 #include <stack>
 #include <algorithm>
+#include <cassert>
 
 struct ListNode {
 	int val;
@@ -15,13 +16,17 @@ class solution
 {
 public:
 	bool Find(int target, std::vector<std::vector<int>> array);	// 剑指Offer 二维数组中的查找
-	ListNode* ReverseList(ListNode* head);			// 剑指Offer 倒序打印单链表
+	ListNode* ReverseList(ListNode* head);			// 单链表倒置
+	ListNode* ReverseListByRecursion(ListNode* head);	// 单链表转置递归方法
+	ListNode* FindTheKNode(ListNode* head, int k);	// 查找第K个节点
+	ListNode* FindCenterNode(ListNode* head); // 查找链表中间节点
 	void ReverseString(std::string& str, size_t n);	// 字符串翻转	
 	bool FindBrotherStr(std::string str, std::string target);	// 查找兄弟字符串
 	int StrToInt(std::string str);	// 字符串转整数
 	char FindFirstSingleChar(std::string str);	// 查找第一个只出现一次的字符
 	int LongestPalindrome(std::string str);	// 最长回文子串
 	bool isLinkListCross(ListNode* listA, ListNode* listB);	// 判断两个单链表是否相交
+	
 };
 
 bool solution::Find(int target, std::vector<std::vector<int>> array)
@@ -60,6 +65,49 @@ ListNode* solution::ReverseList(ListNode* head)
 		pNode = pNext;
 	}
 	return pNewHead;
+}
+
+ListNode* solution::ReverseListByRecursion(ListNode* head)
+{
+	if (head == NULL || head->next == NULL)
+		return head;
+	ListNode* newNode = this->ReverseListByRecursion(head->next);
+	head->next->next = head;
+	head->next = NULL;
+
+	return newNode;
+}
+
+ListNode* solution::FindTheKNode(ListNode* head, int k)
+{
+	ListNode* p1 = head;
+	ListNode* p2 = head;
+	int i = k;
+
+	for (; i > 0 && p1 != NULL; i--)
+	{
+		p1 = p1->next;
+	}
+	if (i > 0) return NULL;
+	while (p1 != NULL)
+	{
+		p1 = p1->next;
+		p2 = p2->next;
+	}
+	return p2;
+}
+
+ListNode* solution::FindCenterNode(ListNode* head)
+{
+	ListNode* p1 = head;
+	ListNode* p2 = head;
+	if (head == NULL) return NULL;
+	while (p1 != NULL && p1->next != NULL)
+	{
+		p1 = p1->next->next;
+		p2 = p2->next;
+	}
+	return p2;
 }
 
 void solution::ReverseString(std::string &str, size_t n)
@@ -182,6 +230,82 @@ int solution::LongestPalindrome(std::string str)
 	return res - 1;
 }
 
+
+bool solution::isLinkListCross(ListNode* listA, ListNode* listB)
+{
+	// 判断两个链表中是否存在环 
+	bool res = false;
+	ListNode* p1 = listA;
+	ListNode* p2 = listA;
+	bool isListAHaveCircle = false;
+	bool isListBHaveCircle = false;
+	ListNode* pListACircleNode = NULL;
+	ListNode* pListBCircleNode = NULL;
+
+	assert(listA != NULL);
+	assert(listB != NULL);
+	
+	while (p1 != NULL && p1->next != NULL)
+	{
+		p1 = p1->next->next;
+		p2 = p2->next;
+		if (p1 == p2)
+		{
+			pListACircleNode = p1;
+			isListAHaveCircle = true;
+			break;
+		}
+	}
+	
+	p1 = listB;
+	p2 = listB;
+	while (p1 != NULL && p1->next != NULL)
+	{
+		p1 = p1->next->next;
+		p2 = p2->next;
+		if (p1 == p2)
+		{
+			pListBCircleNode = p2;
+			isListBHaveCircle = true;
+			break;
+		}
+	}
+	p1 = NULL;
+	p2 = NULL;
+
+	// 无环的情况
+	if (!isListAHaveCircle && !isListBHaveCircle)
+	{
+		p1 = listA->next;
+		p2 = listB->next;
+		while (p1 != NULL) p1 = p1->next;
+		while (p2 != NULL) p2 = p2->next;
+		if (p1 == p2) res = true;
+		p1 = NULL;
+		p2 = NULL;
+	}
+
+	// 存在一个有环的情况
+	if ((isListAHaveCircle && !isListBHaveCircle) || (isListBHaveCircle && !isListBHaveCircle)) res = false;
+
+	// 两个都含环的情况
+	if (isListAHaveCircle && isListBHaveCircle)
+	{
+		p1 = pListACircleNode->next;
+		while (p1 != pListACircleNode)
+		{
+			if (p1 == pListBCircleNode)
+			{
+				res = true;
+				break;
+			}
+			p1 = p1->next;
+		}
+	}
+	p1 = NULL;
+	p2 = NULL;
+	return res;
+}
 
 int main()
 {

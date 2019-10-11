@@ -15,18 +15,18 @@ struct ListNode {
 class solution
 {
 public:
-	bool Find(int target, std::vector<std::vector<int>> array);	// 剑指Offer 二维数组中的查找
-	ListNode* ReverseList(ListNode* head);			// 单链表倒置
-	ListNode* ReverseListByRecursion(ListNode* head);	// 单链表转置递归方法
-	ListNode* FindTheKNode(ListNode* head, int k);	// 查找第K个节点
-	ListNode* FindCenterNode(ListNode* head); // 查找链表中间节点
-	void ReverseString(std::string& str, size_t n);	// 字符串翻转	
-	bool FindBrotherStr(std::string str, std::string target);	// 查找兄弟字符串
-	int StrToInt(std::string str);	// 字符串转整数
-	char FindFirstSingleChar(std::string str);	// 查找第一个只出现一次的字符
-	int LongestPalindrome(std::string str);	// 最长回文子串
-	bool isLinkListCross(ListNode* listA, ListNode* listB);	// 判断两个单链表是否相交
-	
+	bool Find(int target, std::vector<std::vector<int>> array);				// 剑指Offer 二维数组中的查找
+	ListNode* ReverseList(ListNode* head);									// 单链表倒置
+	ListNode* ReverseListByRecursion(ListNode* head);						// 单链表转置递归方法
+	ListNode* FindTheKNode(ListNode* head, int k);							// 查找第K个节点
+	ListNode* FindCenterNode(ListNode* head);								// 查找链表中间节点
+	void ReverseString(std::string& str, size_t n);							// 字符串翻转	
+	bool FindBrotherStr(std::string str, std::string target);				// 查找兄弟字符串
+	int StrToInt(std::string str);											// 字符串转整数
+	char FindFirstSingleChar(std::string str);								// 查找第一个只出现一次的字符
+	int LongestPalindrome(std::string str);									// 最长回文子串
+	bool isLinkListCross(ListNode* listA, ListNode* listB);					// 判断两个单链表是否相交
+	std::string DeleteCharInStrstd(std::string str1, std::string str2);		// 在字符串中删除指定的字符
 };
 
 bool solution::Find(int target, std::vector<std::vector<int>> array)
@@ -51,9 +51,9 @@ bool solution::Find(int target, std::vector<std::vector<int>> array)
 
 ListNode* solution::ReverseList(ListNode* head)
 {
-	ListNode* pNode = head;	// 当前节点
-	ListNode* pPrev = NULL;	// 指向当前节点的上一个节点
-	ListNode* pNext = NULL;	// 指向当前节点的下一个节点
+	ListNode* pNode = head;		// 当前节点
+	ListNode* pPrev = NULL;		// 指向当前节点的上一个节点
+	ListNode* pNext = NULL;		// 指向当前节点的下一个节点
 	ListNode* pNewHead = NULL;	// 新链表头指针
 	
 	while (pNode != NULL)
@@ -216,7 +216,7 @@ int solution::LongestPalindrome(std::string str)
 	size_t id = 0;
 	for (size_t i = 1; i < str.length(); i++)
 	{
-		PalindromeLen[int(i)] = mx > i ? std::min(PalindromeLen[int(2 * id - i)], mx - i) : 1;
+		PalindromeLen[int(i)] = mx > i ? std::min(PalindromeLen[int(2 * id - i)], unsigned(mx - i)) : 1;
 		while (str[i + PalindromeLen[i]] == str[i - PalindromeLen[i]]) PalindromeLen[i]++;
 		if (i + PalindromeLen[i] > mx)
 		{
@@ -304,6 +304,19 @@ bool solution::isLinkListCross(ListNode* listA, ListNode* listB)
 	}
 	p1 = NULL;
 	p2 = NULL;
+	return res;
+}
+
+std::string solution::DeleteCharInStrstd(std::string str1, std::string str2)
+{
+	std::string res;
+	bool* pHashMap = new bool[CHAR_MAX]();
+	for (size_t i = 0; i < str2.length(); i++) pHashMap[str2[i]] = true;
+	for (size_t i = 0; i < str1.length(); i++)
+	{
+		if (!pHashMap[str1[i]]) res.push_back(str1[i]);
+	}
+	delete[] pHashMap;
 	return res;
 }
 
